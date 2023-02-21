@@ -27,6 +27,7 @@
 		<DefaultItemExcludes>$(DefaultItemExcludes);Documentation/**</DefaultItemExcludes>
 		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<!-- In .NET 5.0 Binary Formatters are off by default.  Support is added for .NET 5.0+ for fallback JSON Serialization -->
@@ -61,9 +62,10 @@
 		</Otherwise>
 	</Choose>
 
+	
 	<!-- ILRepack config needs to be specified before MonoMod.Common PackageReference due its dependency on properties defined here. -->
 	<Choose>
-		<When Condition="!$(IsCoreOrStandard) And '$(Configuration)'=='Release'">
+		<When Condition="'$(Configuration)'=='Release'">
 			<PropertyGroup>
 				<ILRepackInternalize>true</ILRepackInternalize>
 			</PropertyGroup>
