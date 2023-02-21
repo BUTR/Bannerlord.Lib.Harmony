@@ -48,10 +48,25 @@ jobs:
       with:
         dotnet-version: 7.0.x
 
+    - name: Install Refasmer
+      run: dotnet tool install -g JetBrains.Refasmer.CliTool
+
     - name: Build Harmony
       run: dotnet build Harmony/Harmony.csproj --configuration Release
 
     - uses: actions/upload-artifact@v3
       with:
         name: package
-        path: Harmony/bin/Release/Lib.Harmony.2.2.2.nupkg
+        path: Harmony/bin/Release/Bannerlord.Lib.Harmony.2.2.2.nupkg
+        
+    - name: Push to NuGet
+      run: dotnet nuget push "./Harmony/bin/Release/*.nupkg" -k ${{secrets.NUGET_API_KEY}} -s https://www.nuget.org
+      shell: pwsh
+
+    - name: Push to GPR
+      run: |
+           for f in ./Harmony/bin/Release/*.nupkg
+           do
+             curl -vX PUT -u "vslee:${{secrets.GITHUB_TOKEN}}" -F package=@$f https://nuget.pkg.github.com/BUTR/
+           done
+      shell: bash
