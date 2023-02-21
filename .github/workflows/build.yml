@@ -16,7 +16,7 @@ env:
 jobs:
   build:
     name: Publish to NuGet and GPR
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Setup
       uses: butr/actions-common-setup@v2.0
@@ -49,9 +49,9 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Build Harmony
-      run: dotnet build Harmony/Harmony.csproj --configuration Release -o "./packages" 
+      run: dotnet build Harmony/Harmony.csproj --configuration Release
 
     - uses: actions/upload-artifact@v3
       with:
-        name: packages
-        path: packages # or path/to/artifact
+        name: package
+        path: Harmony/bin/Release/Lib.Harmony.2.2.2.nupkg
