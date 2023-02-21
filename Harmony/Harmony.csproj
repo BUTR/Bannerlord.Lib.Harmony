@@ -6,20 +6,20 @@
 		<Product>Harmony</Product>
 		<Company>Andreas Pardeike</Company>
 		<Copyright>Copyright © 2016</Copyright>
-		<Description>A general non-destructive patch library for .NET and Mono modules</Description>
-		<PackageId>Lib.Harmony</PackageId>
+		<Description>A general non-destructive patch library for .NET and Mono modules. Fork of Lib.Harmony that embeds MonoMod.Common</Description>
+		<PackageId>Bannerlord.Lib.Harmony</PackageId>
 		<Authors>Andreas Pardeike</Authors>
 		<AssemblyName>0Harmony</AssemblyName>
 		<SignAssembly>true</SignAssembly>
 		<Version>$(HarmonyVersion)</Version>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageProjectUrl>https://github.com/pardeike/Harmony</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/BUTR/Harmony</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageTags>Harmony,Mono,Patch,Patching,Runtime,Detour,Detours,Aspect,Aspects</PackageTags>
 		<AssemblyVersion>$(HarmonyVersion)</AssemblyVersion>
 		<FileVersion>$(HarmonyVersion)</FileVersion>
 		<PackageIcon>HarmonyLogo.png</PackageIcon>
-		<PackageIconUrl>https://raw.githubusercontent.com/pardeike/Harmony/master/HarmonyLogo.png</PackageIconUrl>
+		<PackageIconUrl>https://raw.githubusercontent.com/BUTR/Harmony/master/HarmonyLogo.png</PackageIconUrl>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<LogFile>obj/docfx-$(TargetFramework).log</LogFile>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
