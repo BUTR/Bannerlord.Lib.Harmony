@@ -1,0 +1,52 @@
+name: Publish Tool and NuGet
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+  # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # Disable sending .NET CLI telemetry to Microsoft.
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build:
+    name: Publish to NuGet and GPR
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup
+      uses: butr/actions-common-setup@v2.0
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Setup .NET 3.0.x
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 3.0.x
+
+    - name: Setup .NET 3.1.x
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Setup .NET 5.0.x
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Setup .NET 6.0.x
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Setup .NET 7.0
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Build Harmony
+      run: dotnet build Harmony.sln --configuration Release -o "./packages" 
