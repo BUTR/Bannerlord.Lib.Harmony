@@ -49,4 +49,4 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Build Harmony
-      run: dotnet build Harmony.sln --configuration Release -o "./packages" 
+      run: dotnet build Harmony/Harmony.csproj --configuration Release -o "./packages" 
