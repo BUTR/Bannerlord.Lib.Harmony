@@ -11,7 +11,7 @@
 		<Authors>Andreas Pardeike</Authors>
 		<AssemblyName>0Harmony</AssemblyName>
 		<SignAssembly>true</SignAssembly>
-		<PackageVersion>$(HarmonyVersion)-beta</PackageVersion>
+		<PackageVersion>$(HarmonyVersion)-beta2</PackageVersion>
 		<Version>$(HarmonyVersion)</Version>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BUTR/Harmony</PackageProjectUrl>
