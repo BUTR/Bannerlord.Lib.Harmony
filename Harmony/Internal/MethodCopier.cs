@@ -165,14 +165,6 @@ namespace HarmonyLib
 			ParseExceptions();
 		}
 
-		private delegate MethodBuilder DefinePInvokeMethodDelegate(TypeBuilder instance, string name, string dllName, MethodAttributes attributes,
-			CallingConventions callingConvention, Type? returnType, Type[]? parameterTypes,
-			CallingConvention nativeCallConv, CharSet nativeCharSet);
-		private static DefinePInvokeMethodDelegate DefinePInvokeMethod = AccessTools.MethodDelegate<DefinePInvokeMethodDelegate>("System.Reflection.Emit.TypeBuilder:DefinePInvokeMethod");
-
-		private delegate Type? CreateTypeDelegate(TypeBuilder instance);
-		private static CreateTypeDelegate CreateType = AccessTools.MethodDelegate<CreateTypeDelegate>("System.Reflection.Emit.TypeBuilder:CreateType");
-
 		// if we have no instructions we probably deal with a native dllimport method
 		//
 		internal void HandleNativeMethod()
@@ -193,13 +185,13 @@ namespace HarmonyLib
 
 			var dynamicModule = dynamicAssembly.DefineDynamicModule(assemblyName.Name);
 			var typeBuilder = dynamicModule.DefineType("NativeMethodHolder", TypeAttributes.Public | TypeAttributes.UnicodeClass);
-			var methodBuilder = DefinePInvokeMethod(typeBuilder, methodInfo.Name, dllAttribute.Value,
+			var methodBuilder = NetStandardHelper.DefinePInvokeMethod(typeBuilder, methodInfo.Name, dllAttribute.Value,
 				MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.PinvokeImpl,
 				CallingConventions.Standard, methodInfo.ReturnType, methodInfo.GetParameters().Select(x => x.ParameterType).ToArray(),
 				dllAttribute.CallingConvention, dllAttribute.CharSet
 			);
 			methodBuilder.SetImplementationFlags(methodBuilder.GetMethodImplementationFlags() | MethodImplAttributes.PreserveSig);
-			var type = CreateType(typeBuilder);
+			var type = NetStandardHelper.CreateType(typeBuilder);
 			var proxyMethod = type.GetMethod(methodInfo.Name);
 			/*
 			var name = $"{(methodInfo.DeclaringType?.FullName ?? "").Replace(".", "_")}_{methodInfo.Name}";
