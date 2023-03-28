@@ -11,5 +11,6 @@ This is a light fork of Lib.Harmony with non integrated MonoMod.Common. There's 
 In .NET Framework it's integrated (linked) within Harmony.  
 In .NET (Core) it's exposed as a separate dependency.  
 For consistence sake and compatibility reasons, we need to have a consistent behaviour, thus we forked Lib.Harmony and made it no longer link the dependency on .NET Framework, redirecting the integrated types via TypeForwardedTo.  
+We also reduced the targets to net472, netcoreapp3.1 and netstandard2.0 to target only game supported runtimes.  
   
 Check the original for more info!
