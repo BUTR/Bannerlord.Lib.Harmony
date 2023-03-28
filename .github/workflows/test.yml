@@ -2,6 +2,10 @@ name: Test
 
 on:
   push:
+    paths:
+      - '.github/workflows/test.yml'
+      - 'Harmony/**'
+      - 'HarmonyTest/**'
   workflow_dispatch:
 
 env:
