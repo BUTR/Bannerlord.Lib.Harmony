@@ -11,7 +11,7 @@
 		<Authors>Andreas Pardeike</Authors>
 		<AssemblyName>0Harmony</AssemblyName>
 		<SignAssembly>true</SignAssembly>
-		<PackageVersion>$(HarmonyVersion)-beta3</PackageVersion>
+		<PackageVersion>$(HarmonyVersion)-beta4</PackageVersion>
 		<Version>$(HarmonyVersion)</Version>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BUTR/Harmony</PackageProjectUrl>
@@ -86,8 +86,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- https://dev.azure.com/MonoMod/MonoMod/_packaging?_a=feed&feed=DevBuilds -->
-		<PackageReference Include="MonoMod.Common" Version="$(MonoModCommonVersion)" />
+		<PackageReference Include="MonoMod.Utils" Version="22.7.31.1" />
+		<PackageReference Include="MonoMod.RuntimeDetour" Version="22.7.31.1" />
 
 		<!-- Reference assemblies are needed for non-Windows .NET Framework targeting builds. -->
 		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
