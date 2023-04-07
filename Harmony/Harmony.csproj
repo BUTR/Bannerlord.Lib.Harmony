@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net472;netcoreapp3.1;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net472;netcoreapp3.1</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Product>Harmony</Product>
 		<Company>Andreas Pardeike</Company>
@@ -11,7 +11,7 @@
 		<Authors>Andreas Pardeike</Authors>
 		<AssemblyName>0Harmony</AssemblyName>
 		<SignAssembly>true</SignAssembly>
-		<PackageVersion>$(HarmonyVersion)-beta4</PackageVersion>
+		<PackageVersion>$(HarmonyVersion)</PackageVersion>
 		<Version>$(HarmonyVersion)</Version>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/BUTR/Harmony</PackageProjectUrl>
@@ -29,40 +29,9 @@
 		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<IsNET5OrGreater>false</IsNET5OrGreater>
 	</PropertyGroup>
 
-	<!-- In .NET 5.0 Binary Formatters are off by default.  Support is added for .NET 5.0+ for fallback JSON Serialization -->
-	<Choose>
-		<When Condition="'$(TargetFramework)'=='net5.0' Or '$(TargetFramework)'=='net6.0'">
-			<PropertyGroup>
-				<IsNET5OrGreater>true</IsNET5OrGreater>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<IsNET5OrGreater>false</IsNET5OrGreater>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-
-	<Choose>
-		<!--
-		Ideally would check for .NET Core and .NET 5.0+ via TargetFrameworkIdentifier being .NETCoreApp, but that property isn't defined at this point,
-		so instead, relying on the fact that all .NET Core and .NET 5.0+ (and .NET Standard) have a period in their TFMs.
-		-->
-		<When Condition="$(TargetFramework.Contains('.'))">
-			<PropertyGroup>
-				<IsCoreOrStandard>true</IsCoreOrStandard>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<IsCoreOrStandard>false</IsCoreOrStandard>
-				<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-	
 	<ItemGroup>
 		<None Include="..\LICENSE" Pack="true" PackagePath="" />
 		<None Include="..\HarmonyLogo.png" Pack="true" Visible="false" PackagePath="" />
@@ -81,22 +50,21 @@
 		<DebugSymbols>false</DebugSymbols>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(IsNET5OrGreater)">
-		<DefineConstants>$(DefineConstants);NET50_OR_GREATER</DefineConstants>
-	</PropertyGroup>
-
 	<ItemGroup>
-		<PackageReference Include="MonoMod.Utils" Version="22.7.31.1" />
-		<PackageReference Include="MonoMod.RuntimeDetour" Version="22.7.31.1" />
+		<PackageReference Include="MonoMod.Utils" Version="22.7.31.1" PrivateAssets="all" />
+		<PackageReference Include="MonoMod.RuntimeDetour" Version="22.7.31.1" PrivateAssets="all" />
 
 		<!-- Reference assemblies are needed for non-Windows .NET Framework targeting builds. -->
 		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
-
-		<!-- Reference SRE helpers for .NET Standard -->
-		<PackageReference Include="System.Reflection.Emit" Version="4.7.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
-
 	</ItemGroup>
 
+	<!-- .net 5, 6 and 7 support -->
+	<PropertyGroup Condition="'$(TargetFramework)'=='net5.0' Or '$(TargetFramework)'=='net6.0' Or '$(TargetFramework)'=='net7.0'">
+		<IsNET5OrGreater>true</IsNET5OrGreater>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(IsNET5OrGreater)">
+		<DefineConstants>$(DefineConstants);NET50_OR_GREATER</DefineConstants>
+	</PropertyGroup>
 	<ItemGroup Condition="$(IsNET5OrGreater)">
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
 	</ItemGroup>
@@ -106,25 +74,29 @@
 		<Compile Remove="**\*.net7.cs" />
 	</ItemGroup>
 
-	<Target Name="RemoveOldNuGetPackages" BeforeTargets="PreBuildEvent">
-		<PropertyGroup>
-			<WorkingDirectory>$(MSBuildThisFileDirectory)bin\$(Configuration)</WorkingDirectory>
-		</PropertyGroup>
+	<!-- netstandard2.0 reference assemblies -->
+	<PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
+		<!-- Remove from /lib in NuGet -->
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<!-- Create reference Assemblies instead of a full assembly -->
+		<ProduceOnlyReferenceAssembly>true</ProduceOnlyReferenceAssembly>
+		<!-- Add our target for packing -->
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddRefAssemblyToPackage</TargetsForTfmSpecificContentInPackage>
+	</PropertyGroup>
+	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
+		<!-- Adding System.Reflection.Emit to because there are public types exposed from its's package -->
+		<PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+	</ItemGroup>
+	<Target Name="AddRefAssemblyToPackage" Condition="$(TargetFramework) == 'netstandard2.0'">
 		<ItemGroup>
-			<OldNugetPackages Include="$(WorkingDirectory)\$(PackageId).*.nupkg" Exclude="$(WorkingDirectory)\$(PackageId).$(Version).nupkg" />
+			<!-- Adding the Reference Assembly and the xml documentation to /ref of NuGet -->
+			<TfmSpecificPackageFile Include="$(OutDir)$(AssemblyName).dll">
+				<PackagePath>ref/netstandard2.0</PackagePath>
+			</TfmSpecificPackageFile>
+			<TfmSpecificPackageFile Include="$(OutDir)$(AssemblyName).xml">
+				<PackagePath>ref/netstandard2.0</PackagePath>
+			</TfmSpecificPackageFile>
 		</ItemGroup>
-		<Delete Files="@(OldNugetPackages)" />
-	</Target>
-
-	<Target Name="Zip" AfterTargets="Pack" DependsOnTargets="CleanZip" Condition="'$(Configuration)'=='Release'">
-		<ZipDirectory SourceDirectory="$(MSBuildThisFileDirectory)bin\$(Configuration)" DestinationFile="$(MSBuildThisFileDirectory)bin\Harmony.$(Version).zip" Overwrite="true" />
-	</Target>
-
-	<Target Name="CleanZip" AfterTargets="Clean">
-		<ItemGroup>
-			<OldZipFiles Include="$(MSBuildThisFileDirectory)bin\*.zip" />
-		</ItemGroup>
-		<Delete Files="@(OldZipFiles)" />
 	</Target>
 
 </Project>
