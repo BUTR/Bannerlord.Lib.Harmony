@@ -7,10 +7,14 @@
 
 ### About
 
-This is a light fork of Lib.Harmony with non integrated MonoMod.Common. There's a difference in how Harmony exposes MonoMod.Common on .NET Framework and .NET (Core).  
-In .NET Framework it's integrated (linked) within Harmony.  
-In .NET (Core) it's exposed as a separate dependency.  
-For consistence sake and compatibility reasons, we need to have a consistent behaviour, thus we forked Lib.Harmony and made it no longer link the dependency on .NET Framework, redirecting the integrated types via TypeForwardedTo.  
-We also reduced the targets to net472, netcoreapp3.1 and netstandard2.0 to target only game supported runtimes.  
+This is a fork of Lib.Harmony with the following features:
+* We removed MonoMod.Common from Harmony - there's a difference in how Harmony exposes MonoMod.Common on .NET Framework and .NET (Core):
+  * In .NET Framework it's integrated (statically linked) within Harmony.  
+  * In .NET (Core) it's exposed as a separate dependency.  
+For consistence sake and compatibility reasons, we need to have a consistent behaviour, removed MonoMod.Common and redirected the integrated types via TypeForwardedTo.  
+* We also reduced the targets to net472, netcoreapp3.1 and netstandard2.0 to target only game supported runtimes.  
+* We replaced MonoMod.Common with MonoMod.Utils and MonoMod.RuntimeDetours.
+
+This fork is _**fully**_ backwards compatible with the original **Lib.Harmony**!
   
-Check the original for more info!
+Check the original repo for more info!
