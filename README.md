@@ -18,3 +18,8 @@ For consistence sake and compatibility reasons, we need to have a consistent beh
 This fork is _**fully**_ backwards compatible with the original **Lib.Harmony**!
   
 Check the original repo for more info!
+
+## Harmony Origin Notes
+* The name of `0Harmony.dll` was chosen due to RimWorld's assembly load order. It's alphabetical
+* MonoMod.Common was merged into Harmony via ILMerge because of RimWorld. It load assemblies as byte[], preventing the load of sub-dependencies
+* MonoMod.Common is a fork of MonoMod.Utils and MonoMod.RuntimeDetours
